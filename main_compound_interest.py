@@ -1,5 +1,3 @@
-import warnings
-
 from calculators import compound_interest_calculator as cic
 
 # Config
@@ -12,11 +10,6 @@ want_csv = True
 CSV_FILE = "files/compound_interest.csv"
 
 plot = True
-
-# Suppress specific warning for matplotlib with WSL
-warnings.filterwarnings(
-    "ignore", message="Unable to import Axes3D", category=UserWarning
-)
 
 cic.calculate_compound(
     years_fund,

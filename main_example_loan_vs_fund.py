@@ -1,4 +1,15 @@
+# Suppress specific warning for matplotlib with WSL
+import warnings
+
+warnings.filterwarnings(
+    "ignore", message="Unable to import Axes3D", category=UserWarning
+)
+
+import matplotlib.pyplot as plt
+import pandas as pd
+
 import utilities as ut
+from calculators import compound_interest_calculator as cic
 from calculators import loan_vs_funds as lvf
 
 ###############################################################################
@@ -7,14 +18,14 @@ from calculators import loan_vs_funds as lvf
 # Life
 N_tot = 30
 verbose = True
-tocsv = True
-csv_file = "files/loan_vs_funds.csv"
+wantcsv = True
+CSV_FILE = "files/example_loan_vs_funds.csv"
 plot = True
 
 # Loan
 loan_total_ammount = 100000  # total loan without interests
 loan_r = 0.03  # % of annual interest payment
-loan_N = 29
+loan_N = 20
 
 # Fund
 rent_expected = 700
@@ -50,31 +61,123 @@ if quota_monthly >= rent_expected:
     print(ut.st("error", msg))
     exit(1)
 
+# Printing sum up data of the first period =< loan_years
 print(
     "*******************************************\n"
+    f"r: {100 * loan_r}%\n"
     f"Annual Payment fixed quota: {round(quota, 2)}€\n"
     f"Monthly Payment fixed quota: {round(quota_monthly, 2)}€\n"
     f"Number of years paying loan: {loan_N}\n"
     f"Total Interests: {round(interest_total, 2)}€ "
     f"({round(100 * interest_total / loan_total_ammount, 2)}%)\n"
     f"Expected monthly rent: {round(rent_expected, 2)}€\n"
-    f"Monthly diff rent-quota: {round(diff_rent_quota, 2)}€\n\n"
+    f"Monthly diff rent-quota: {round(diff_rent_quota, 2)}€\n"
     "*******************************************\n"
 )
 
 start2_formated = f"{start2:,.2f}"
 balance_formated = f"{balance:,.2f}"
 
-
+# Printing sum up data of the first period > loan_years
 print(
-    "*******************************************\n"
+    "\n*******************************************\n"
     f"Investing {loan_N} years:\n"
+    f"  * r                    = {100 * fund_r}%\n"
     f"  * initial_contribution = 0€\n"
     f"  * monthly              = {round(diff_rent_quota, 2)}€\n"
     f"  * final_balance        = {start2_formated}€\n\n"
     f"Investing {N_tot - loan_N} years:\n"
+    f"  * r                    = {100 * fund_r}%\n"
     f"  * initial_contribution = {start2_formated}€\n"
     f"  * monthly              = {round(rent_expected, 2)}€\n"
     f"  * final_balance        = {balance_formated}€\n"
     "*******************************************"
 )
+
+# Load a dataframe
+## Getting data from first period
+first_period_data = cic.calculate_compound(
+    loan_N,
+    diff_rent_quota,
+    fund_r,
+    0,
+    False,
+    CSV_FILE,
+    verbose=False,
+    plot=False,
+)
+
+## Getting data from first period
+second_period_data = cic.calculate_compound(
+    N_tot - loan_N,
+    rent_expected,
+    fund_r,
+    start2,
+    False,
+    CSV_FILE,
+    verbose=False,
+    plot=False,
+)
+
+## Gather data
+full_data = {}
+
+for key in first_period_data.keys():
+    # Transform second_period_data for contributed to make it
+    # linear
+    if key == "Contributed":
+        adj = (
+            first_period_data["Contributed"][-1]
+            - first_period_data["Balance"][-1]
+        )
+        second_period_data[key] = [x + adj for x in second_period_data[key]]
+
+    # Combine the lists for each key
+    full_data[key] = first_period_data[key] + second_period_data[key]
+
+df = pd.DataFrame(full_data)
+if verbose:
+    print(df)
+
+# Plot
+if plot:
+    plt.figure(1)
+    plt.title(f"Compound interest in {N_tot} years")
+    plt.xlabel("N (years)")
+    plt.ylabel("Euros")
+
+    axis_x = range(1, N_tot + 1)
+    balance_bar = plt.bar(
+        axis_x, full_data["Balance"], label="Benefit", color="g"
+    )
+    contributed_bar = plt.bar(
+        axis_x, full_data["Contributed"], label="Contributed", color="b"
+    )
+
+    plt.xticks(
+        axis_x
+    )  # Set the tick labels to be the same as the values of axis_x
+    plt.legend()  # Add a legend
+
+    # Add value labels on top of the bars
+    for bar in balance_bar:
+        yval = bar.get_height()
+        plt.text(
+            bar.get_x() + bar.get_width() / 2,
+            yval,
+            f"{yval:,.0f}€",
+            ha="center",
+            va="bottom",
+        )
+
+    for bar in contributed_bar:
+        yval = bar.get_height()
+        plt.text(
+            bar.get_x() + bar.get_width() / 2,
+            yval,
+            f"{yval:,.0f}€",
+            ha="center",
+            va="bottom",
+        )
+
+    plt.show()

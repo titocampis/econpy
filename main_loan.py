@@ -2,11 +2,13 @@ from calculators import loan_calculator as lc
 
 # Config
 loan_total_ammount = 100000  # total loan without interests
-loan_years = 25
+loan_years = 15
 loan_r = 0.03  # % of annual interest payment
 
 want_csv = True
 CSV_FILE = "files/loan.csv"
+
+plot = True
 
 # Main
 lc.calculate_loan(
@@ -16,4 +18,5 @@ lc.calculate_loan(
     tocsv=want_csv,
     csv_file=CSV_FILE,
     verbose=True,
+    plot=plot,
 )

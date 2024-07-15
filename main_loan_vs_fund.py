@@ -1,3 +1,10 @@
+# Suppress specific warning for matplotlib with WSL
+import warnings
+
+warnings.filterwarnings(
+    "ignore", message="Unable to import Axes3D", category=UserWarning
+)
+
 import matplotlib.pyplot as plt
 import pandas as pd
 
@@ -58,7 +65,7 @@ if tocsv:
 # Plot %
 if plot:
     plt.figure(1)
-    plt.title(f"Balance in {N_tot} years depending on years of loan")
+    plt.title(f"Final Balance in {N_tot} years depending on years of loan")
     plt.xlabel("N (years of loan)")
     plt.ylabel("Euros")
 

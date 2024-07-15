@@ -1,4 +1,13 @@
+# Suppress specific warning for matplotlib with WSL
+import warnings
+
+warnings.filterwarnings(
+    "ignore", message="Unable to import Axes3D", category=UserWarning
+)
+
 import matplotlib.pyplot as plt
+
+from calculators import loan_calculator as lc
 
 ###############################################################################
 ############                    Configuration                     #############
@@ -19,7 +28,7 @@ plot_data = "per"  # "per", "eur"
 ###############################################################################
 # Fulfilling the functions depending on N
 for N in N_range:
-    quota = loan_ammount * r * (1 + r) ** N / ((1 + r) ** N - 1)
+    quota = lc.calculate_quota(loan_ammount, N, r)
     interest = quota * N - loan_ammount
 
     quota_vector.append(quota)

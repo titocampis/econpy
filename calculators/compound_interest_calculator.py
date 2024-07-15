@@ -1,3 +1,10 @@
+# Suppress specific warning for matplotlib with WSL
+import warnings
+
+warnings.filterwarnings(
+    "ignore", message="Unable to import Axes3D", category=UserWarning
+)
+
 import matplotlib.pyplot as plt
 import pandas as pd
 
@@ -49,6 +56,9 @@ def calculate_compound(
     csv_file (str): name of the csv file.
     verbose (bool)
     plot (bool)
+
+    Return:
+    data (dict)
     """
     # Vars
     N_range = range(1, N + 1)
@@ -72,7 +82,7 @@ def calculate_compound(
     # Load a dataframe
     data = {
         "Year": list(range(1, N + 1)),
-        "Contribution": [1200] * N,
+        "Contribution": [year_contribution] * N,
         "Contributed": total_contributed,
         "Balance": annual_balance,
         "Benefit": annual_benefit,
@@ -96,7 +106,7 @@ def calculate_compound(
 
         axis_x = N_range
         balance_bar = plt.bar(
-            axis_x, annual_balance, label="Balance", color="g"
+            axis_x, annual_balance, label="Benefit", color="g"
         )
         contributed_bar = plt.bar(
             axis_x, total_contributed, label="Contributed", color="b"
@@ -130,4 +140,4 @@ def calculate_compound(
 
         plt.show()
 
-    return balance
+    return data

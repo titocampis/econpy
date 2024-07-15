@@ -1,5 +1,6 @@
 import utilities as ut
 from calculators import compound_interest_calculator as cic
+from calculators import loan_calculator as lc
 
 
 def calculate_balance_loan_vs_funds_per_year(
@@ -11,12 +12,7 @@ def calculate_balance_loan_vs_funds_per_year(
     r_fund: float = 0.06,
 ):
     # Calculate Quota, interest_total and diff_rent_quota
-    quota = (
-        ammount_loan
-        * r_loan
-        * (1 + r_loan) ** loan_years
-        / ((1 + r_loan) ** loan_years - 1)
-    )
+    quota = lc.calculate_quota(ammount_loan, loan_years, r_loan)
     quota_monthly = quota / 12
     # interest_total = quota * loan_years - ammount_loan
     diff_rent_quota = rent_expected - quota_monthly
