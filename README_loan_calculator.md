@@ -45,7 +45,8 @@ interest(n) = quota + (loan\_ammount \times r - quota) \times (1 + r)^{n-1}
 interest(n) = loan\_ammount \times r \times (1 + r)^{n-1} - quota \times [(1 + r)^{n-1} - 1]
 $$
 
-$$ principal(n) = quota - interest(n)
+$$
+principal(n) = quota - interest(n)
 \newline
 principal(n) = (quota - loan\_ammount \times r) \times (1 + r)^{n-1}
 \newline
