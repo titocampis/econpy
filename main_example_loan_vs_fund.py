@@ -16,7 +16,7 @@ from calculators import loan_vs_funds as lvf
 ############                    Configuration                     #############
 ###############################################################################
 # Life
-N_tot = 30
+N_tot = 40
 verbose = True
 wantcsv = True
 CSV_FILE = "files/example_loan_vs_funds.csv"
@@ -25,7 +25,7 @@ plot = True
 # Loan
 loan_total_ammount = 100000  # total loan without interests
 loan_r = 0.03  # % of annual interest payment
-loan_N = 20
+loan_N = 40
 
 # Fund
 rent_expected = 700
@@ -179,5 +179,15 @@ if plot:
             ha="center",
             va="bottom",
         )
+
+    # Vertical line in the change
+    plt.axvline(
+        x=loan_N,
+        color="red",
+        linestyle="-",
+        linewidth=1,
+        alpha=0.5,
+        label="Loan finish",
+    )
 
     plt.show()
