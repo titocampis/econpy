@@ -18,7 +18,7 @@ def calculate_quota(loan_ammount: float, N: int, r: float = 0.03):
     Parameters:
     loan_ammount (float): total loan without interests.
     N (int): total number of payments.
-    r (float): % of annual interest payment.
+    r (float): period interest rate.
 
     Returns:
     quota (double)
@@ -31,13 +31,13 @@ def calculate_quota(loan_ammount: float, N: int, r: float = 0.03):
 
 def calculate_interest_n(loan_ammount: float, N: int, n: int, r: float = 0.03):
     """
-    Method to calculate the interest of a year n
+    Method to calculate the interest of a period n
 
     Parameters:
     loan_ammount (float): total loan without interests.
     N (int): total number of payments.
-    n (int): year to calculate.
-    r (float): % of annual interest payment.
+    n (int): period to calculate.
+    r (float): period interest rate.
 
     Returns:
     interest_n (double)
@@ -52,13 +52,13 @@ def calculate_interest_n(loan_ammount: float, N: int, n: int, r: float = 0.03):
 
 def calculate_principal_n(loan_ammount: float, N: int, n: int, r: float = 0.03):
     """
-    Method to calculate the principal payment of a year n
+    Method to calculate the principal payment of a period n
 
     Parameters:
     loan_ammount (float): total loan without interests.
-    N (int): total number of payments.
-    n (int): year to calculate.
-    r (float): % of annual interest payment.
+    N (int): total number of periods.
+    n (int): period to calculate.
+    r (float): period interest rate.
 
     Returns:
     principal_n (double)
@@ -76,9 +76,9 @@ def calculate_principal_balance_n(
 
     Parameters:
     loan_ammount (float): total loan without interests.
-    N (int): total number of payments.
-    n (int): year to calculate.
-    r (float): % of annual interest payment.
+    N (int): total number of periods.
+    n (int): period to calculate.
+    r (float): period interest rate.
 
     Returns:
     principal_balance_n (double)
@@ -97,9 +97,9 @@ def check_calculations_interest_principal(
     Method to check that the loan calculations have been done correctly
 
     Parameters:
-    quota (float): quota to pay annually.
-    interest_n (float): interest paid in the year.
-    principal_n (float): principal paid in the year.
+    quota (float)
+    interest_n (float): interest paid in the period.
+    principal_n (float): principal paid in the period.
 
     Returns:
     None
@@ -119,7 +119,7 @@ def check_calculations_interest_total(interest: list, interest_total: float):
     Method to check that the loan calculations have been done correctly
 
     Parameters:
-    interest (list): interest paid every year.
+    interest (list): interest paid every period.
     interest_total (float): total interest paid.
 
     Returns:
@@ -141,6 +141,7 @@ def calculate_loan(
     loan_ammount: int,
     N: int,
     r: float = 0.03,
+    period: str = "year",
     tocsv: bool = True,
     csv_file: str = "files/loan.csv",
     verbose: bool = False,
@@ -151,8 +152,9 @@ def calculate_loan(
 
     Parameters:
     loan_ammount (int): total loan without interests.
-    N (int): total number of payments.
-    r (float): % of annual interest payment.
+    N (int): total number of periods.
+    r (float): period interest rate.
+    period (str): period of payments (month, year)
     tocsv (bool): if results want to be exported to a csv.
     csv_file (str): name of the csv file.
     verbose (bool)
@@ -168,14 +170,14 @@ def calculate_loan(
     # Print Values
     if verbose:
         interest_total_formated = f"{interest_total:,.2f}"
-        quota_formated = f"{quota:,.2f}"
-        quota_month_formated = f"{quota / 12:,.2f}"
+        quota_formated = f"{quota * 12:,.2f}"
+        quota_month_formated = f"{quota:,.2f}"
         print(
             "*******************************************\n"
-            f"r                           = {100 * r}%\n"
-            f"Payment fixed annual quota  = {quota_formated}€\n"
-            f"Payment fixed mensual quota = {quota_month_formated}€\n"
-            f"Total Interests             = {interest_total_formated}€ "
+            f"r annual            = {12 * 100 * r}%\n"
+            f"Fixed annual quota  = {quota_formated}€\n"
+            f"Fixed monthly quota = {quota_month_formated}€\n"
+            f"Total Interests     = {interest_total_formated}€ "
             f"({round(100 * interest_total / loan_ammount, 2)}%)\n"
             "*******************************************\n"
         )
@@ -221,12 +223,22 @@ def calculate_loan(
         print(f"\n{ut.st('OK', f'{csv_file} has been saved')}.")
 
     # Plot
+    ## Adjusting the number of periods to plot
+    if period.lower() == "year":
+        quota = 12 * quota
+        interest = [
+            sum(interest[i : i + 12]) for i in range(0, len(interest), 12)
+        ]
+        axis_x = range(1, int(N / 12 + 1))
+    else:
+        axis_x = range(1, N + 1)
+
+    ## Plot
     if plot:
         plt.figure(1)
         plt.title("Loan Evolution")
         plt.xlabel("N (years of loan)")
         plt.ylabel("Eur(€)")
-        axis_x = range(1, N + 1)
 
         quota_bar = plt.bar(axis_x, quota, label="Principal", color="g")
         interest_bar = plt.bar(

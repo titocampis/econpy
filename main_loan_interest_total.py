@@ -13,23 +13,27 @@ from calculators import loan_calculator as lc
 ############                    Configuration                     #############
 ###############################################################################
 
-loan_ammount = 100000  # total loan without interests
-r = 0.03  # % of annual interest payment
+principal = 100000  # total loan without interests
 N_range = range(5, 60 + 1)
-# N will be the variable of study
-quota_vector = []
-interest_vector = []
+r = 3  # annual interest rate
+# N will be the variable of study in years
 print_data = True
 plot = True
+
 plot_data = "per"  # "per", "eur"
 
 ###############################################################################
 ############                         Main                         #############
 ###############################################################################
+# Correct r
+r = r / 100
+
 # Fulfilling the functions depending on N
+quota_vector = []
+interest_vector = []
 for N in N_range:
-    quota = lc.calculate_quota(loan_ammount, N, r)
-    interest = quota * N - loan_ammount
+    quota = lc.calculate_quota(principal, N, r)
+    interest = quota * N - principal
 
     quota_vector.append(quota)
     interest_vector.append(interest)
@@ -38,7 +42,7 @@ for N in N_range:
     if print_data:
         print(
             f"Years: {N} | Total Interest: {round(interest, 2)}€ "
-            f"({round(100 * interest / loan_ammount, 2)}%) "
+            f"({round(100 * interest / principal, 2)}%) "
             f"| Quota: {quota}(€)"
         )
 
@@ -98,9 +102,9 @@ if plot and plot_data == "per":
     plt.figure(1)
     plt.title("Interest Over N")
     plt.xlabel("N (years of loan)")
-    plt.ylabel("% interest / loan_ammount")
+    plt.ylabel("% interest / principal")
     axis_x = N_range
-    interest_vector_per = [100 * x / loan_ammount for x in interest_vector]
+    interest_vector_per = [100 * x / principal for x in interest_vector]
     plt.plot(axis_x, interest_vector_per, "r", label="% Interest over N")
     plt.xticks(
         axis_x

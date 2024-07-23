@@ -1,6 +1,7 @@
 [flake8]
 max-line-length = 80
-ignore = E266, W503, E402
+ignore = E266, W503, E402, E203
 # E266: To much '#' consecutive
 # W503: and or or in the start of line in if
 # E402 module level import not at top of file
+# E203: whitespace before ':'

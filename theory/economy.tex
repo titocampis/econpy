@@ -1,0 +1,266 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\PassOptionsToPackage{svgnames}{xcolor}
+\usepackage{tcolorbox}
+\usepackage{xcolor}
+\usepackage{lipsum}
+\usepackage{verbatim}
+\tcbuselibrary{skins,breakable}
+\usetikzlibrary{shadings,shadows}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage[a4paper]{geometry}
+\usepackage{listings}
+\usepackage{titlesec}
+\usepackage{amssymb}
+\usepackage[T1]{fontenc}
+\usepackage{multirow} % for Tables
+\usepackage{fancyvrb} % for "\Verb" macro
+\VerbatimFootnotes % enable use of \Verb in footnotes
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily,
+  showstringspaces=false,
+  commentstyle=\color{green},
+  keywordstyle=\color{blue}
+}
+
+\setcounter{secnumdepth}{4}
+\titleformat{\paragraph}
+{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+\title{\textbf{Economy}}
+\author{Alejandro Campos}
+\date{July, 2024}
+
+\setlength{\parindent}{0ex}
+\setlength{\parskip}{6pt}
+\geometry{top=2.5cm, bottom=3cm,left=3cm, right=3cm}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    filecolor=magenta,
+    urlcolor=blue,
+}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\newenvironment{blocktemplate}[1]{%
+    \tcolorbox[beamer,%
+    noparskip,breakable,
+    colframe=Blue,%
+    colbacklower=LimeGreen!75!LightGreen,%
+    title=#1]}%
+    {\endtcolorbox}
+
+\newenvironment{blocktemplateI}[1]{%
+    \tcolorbox[beamer,%
+    noparskip,breakable,
+    colframe=Violet,%
+    colbacklower=Black,%
+    title=#1]}%
+    {\endtcolorbox}
+
+\newenvironment{blocktemplateII}[1]{%
+    \tcolorbox[beamer,%
+    noparskip,breakable,
+    colframe=Green,%
+    colbacklower=LimeGreen!75!LightGreen,%
+    title=#1]}%
+    {\endtcolorbox}
+
+\newenvironment{blocktemplateIII}[1]{%
+    \tcolorbox[beamer,%
+    noparskip,breakable,
+    ,colframe=Red,%
+    colbacklower=LimeGreen!75!LightGreen,%
+    title=#1]}%
+    {\endtcolorbox}
+
+\newtcolorbox{mybasecolorbox}[1][]{%
+  colback=gray!25, colframe=gray!25,
+  coltitle=black,
+  width=(\linewidth-20pt)}
+
+\newenvironment{codetemplate}[1][]{%
+  \mybasecolorbox[#1]
+  \itshape
+}{%
+  \endmybasecolorbox
+}
+
+\begin{document}
+\maketitle
+\newpage
+\tableofcontents
+
+%====================================================================================================
+\newpage
+\section{Loans}
+
+\subsection{Introduction to Loans}
+A loan is a financial transaction in which one party (the lender) provides money to another party (the borrower) with the expectation that the borrower will repay the money, usually with interest, over a specified period. Loans are a common way for individuals and businesses to finance various needs, such as buying a home, funding education, or expanding operations.
+
+Basic concepts:
+
+\begin{itemize}
+    \item \textit{Principal (P):} amount of money borrowed.
+    \item \textit{Principal Balance (B):} remaining amount of money still owed on a loan, excluding interest.
+    \item \textit{Term (N):} number of payments in which the loan will be repaid.
+    \item \textit{Annual Interest Rate (r):} percentage of the principal charged by the lender annually for the use of its money.
+    \item \textit{Monthly Interest Rate ($r_m$):} $r_m = \dfrac{r}{12}$
+    \item \textit{Quota (Q):} periodic payment that the borrower will pay to the lender. The payment period is typically monthly.
+    \item \textit{Interest (I):} cost of borrowing money,  fee that lenders charge for providing the loan.
+    \item \textit{Amortization (A):} process of spreading out a loan into a series of fixed payments over time.
+    \item \textit{Principal Contribution (C):} portion of quota that goes toward reducing the principal balance.
+\end{itemize}
+
+\subsection{Quota Calculation}
+
+\subsubsection{Present Value of Quotas}
+The same amount of money does not have the same value now as in the future, money depreciates due to inflation. In order for the lender to receive the same value of \textit{P} in the future, the future value of each \textit{quota} must be taken into account.
+
+\subsubsection{Demonstration}
+\begin{itemize}
+    \item \textit{m:} number of month
+\end{itemize}
+
+\underline{Situation 1:} Let's supose the lender expects to recover the value of his money in a single payment in 1 month:
+
+So taking into account account the amortization of \textit{P} in 1 month with $r_m$:
+\begin{align*}
+Q = P \cdot (1 + r_m),\quad P = Q \cdot \dfrac{1}{1 + r_m}
+\end{align*}
+
+\underline{Situation 2:} Let's supose the lender expects to recover the value of his money in a single payment in 5 months:
+
+So taking into account the amortization of \textit{P} in 5 months with $r_m$ and compound interest:
+\begin{align*}
+Q = P \cdot (1 + r_m)^5,\quad P = Q \cdot \left(\dfrac{1}{1 + r_m}\right)^5
+\end{align*}
+
+\underline{Situation 3:} Let's supose the lender expects to recover the value of his money in 5 monthly payments:
+
+So taking into account the amortization of \textit{P} in 1, 2, ...5 months with $r_m$ and compound interest:
+\begin{align*}
+P &= Q \cdot \dfrac{1}{1 + r_m} + Q \cdot \left(\dfrac{1}{1 + r_m}\right)^2 + \cdots + Q \cdot \left(\dfrac{1}{1 + r_m}\right)^5 \\
+P &= Q \cdot \sum_{i=1}^{5}\left(\dfrac{1}{1 + r_m}\right)^i
+\end{align*}
+
+\textbf{In a real loan} the lender expects to recover the value of his money in a single payment in \textit{M} monthly payments, so we can deduce:
+\begin{align*}
+P &= Q \cdot \sum_{i=1}^{N}\left(\dfrac{1}{1 + r_m}\right)^i,\quad \text{Geometric Serie with offset 1 and } r=\dfrac{1}{1 + r_m} \\
+P &= Q \cdot \dfrac{\left(\dfrac{1}{1 + r_m}\right) - \left(\dfrac{1}{1 + r_m}\right)^{N+1}}{1 - \left(\dfrac{1}{1 + r_m}\right)} =
+Q \cdot \left(\dfrac{1}{1 + r_m}\right) \cdot \dfrac{1 - \left(\dfrac{1}{1 + r_m}\right)^{N}}{r_m \cdot \left(\dfrac{1}{1 + r_m}\right)} \\
+&= Q \cdot \dfrac{(1+r_m)^N - 1}{r_m \cdot (1+r_m)^N}
+\end{align*}
+
+If we isolate \textit{Q} \verb|->| $Q = P \cdot r_m \cdot \dfrac{(1+r_m)^N}{(1+r_m)^N-1}, \quad r_m = \dfrac{r}{12}$
+
+\subsection{Principal Balance, Interest and Principal Contribution Calculation}
+\begin{itemize}
+    \item \textit{i:} index of periodical payment.
+\end{itemize}
+
+For any kind of loan:
+\begin{align*}
+I(i) &= r_m \cdot B(i-1) \\
+Q &= I(i) + C(i), \quad C(i) = Q - I(i)
+\end{align*}
+
+So the key here is the \textbf{Principal Balance}.
+
+\subsubsection{Principal Balance Calculation}
+To calculate the \textbf{Principal Balance} (\textit{B}) in a period \textit{i}, we need to take into account 2 important concepts:
+\begin{align*}
+B(i) = PA(i) - QA(i)
+\end{align*}
+\begin{itemize}
+    \item \textbf{Principal Amortization:} the lender wants to amortize his \textit{Principal}, so using the compound interest and rate $r_m$:
+\begin{align*}
+PA(i) = P \cdot (1+r_m)^i
+\end{align*}
+    \item \textbf{Periodical Quota Amortization:} the borrower wants to take into account the amortization of his periodical \textit{Quotas}, so using the compound interest of periodical contributions and rate $r_m$:
+\begin{align*}
+QA(i) = Q \cdot \sum_{n=0}^{i-1}(1+r_m)^n = \text{Geometric Serie ...} = Q \cdot \dfrac{(1+r_m)^i - 1}{r_m}
+\end{align*}
+\end{itemize}
+
+\begin{align*}
+B(i) = P \cdot (1+r_m)^i - Q \cdot \dfrac{(1+r_m)^i - 1}{r_m}
+\end{align*}
+
+Knowing that: $Q = P \cdot r_m \cdot \dfrac{(1+r_m)^N}{(1+r_m)^N-1}$
+
+We can deduce:
+
+\begin{align*}
+B(i) &= P \cdot \left[(1+r_m)^i - r_m \cdot \dfrac{(1+r_m)^N}{(1+r_m)^N -1} \cdot
+\dfrac{(1+r_m)^i -1}{r_m} \right] \\
+B(i) &= P \cdot \left[(1+r_m)^i - \dfrac{(1+r_m)^{N+i} - (1+r_m)^N}{(1+r_m)^N -1} \right] \\
+B(i) &= P \cdot \left[\dfrac{(1+r_m)^{N+i} -(1+r_m)^i - (1+r_m)^{N+i} + (1+r_m)^N}{(1+r_m)^N -1} \right] \\
+B(i) &= P \cdot \left[\dfrac{(1+r_m)^N  - (1+r_m)^i}{(1+r_m)^N -1} \right]
+\end{align*}
+
+So, \textit{Principal Balance(i)} Formula: $B(i) = P \cdot \dfrac{(1+r_m)^N  - (1+r_m)^i}{(1+r_m)^N -1}$
+
+Knowing that: $I(i) = r_m \cdot B(i-1)$
+
+\textit{Interest(i)} \verb|->| $I(i) = P \cdot r_m \cdot \dfrac{(1+r_m)^N - (1+r_m)^{i-1}}{(1+r_m)^N -1}$
+
+\subsection{Common types of Loans}
+
+\subsubsection{Fixed-Rate Loans}
+A fixed-rate loan is a type of loan where the \textit{annual interest rate (r)} remains constant throughout the entire term of the loan. This means that the borrower will pay the same interest rate and the same amount of periodical payments for the life of the loan, regardless of changes in market interest rates.
+
+Key characteristics of fixed-rate loans:
+
+\begin{itemize}
+    \item \textbf{Constant Annual Interest Rate:} The interest rate agreed upon at the start of the loan does not change over the term of the loan. This stability allows borrowers to predict their periodical payments and overall cost of the loan.
+    \item \textbf{Predictable Quota:} Because the interest rate is fixed, the periodical payments on a fixed-rate loan are consistent. This predictability can make budgeting easier for borrowers.
+    \item \textbf{Term Length:} Fixed-rate loans come with various term lengths, such as 15, 20, or 30 years. The term length affects the amount of each payment and the total interest paid over the life of the loan.
+    \item \textbf{Amortization:} Fixed-rate loans are typically amortizing loans, meaning that the payments are structured so that over time, both principal and interest are paid off by the end of the loan term. Early payments mostly cover interest, but over time, a larger portion of the payment goes toward the principal.
+    \item \textbf{Interest Rate Risks:} While the fixed rate protects borrowers from interest rate increases, it also means that they cannot benefit from potential decreases in interest rates. If market rates fall significantly, the borrower is stuck with the higher rate unless they refinance the loan.
+\end{itemize}
+
+\subsubsection{Variable-Rate Loans (Adjustable-rate loans - ARL)}
+A variable-rate loan, also known as an adjustable-rate loan (ARL), is a type of loan where the interest rate can change periodically based on fluctuations in a benchmark interest rate or index. This means that the borrower's interest rate and, consequently, their periodical payments can vary over the term of the loan.
+
+Key characteristics of variable-rate loans:
+
+\begin{enumerate}
+    \item \textbf{Adjustable Interest Rate}: Unlike fixed-rate loans, the interest rate on a variable-rate loan is not set in stone. It adjusts at regular intervals based on changes in a specific benchmark rate, such as the \textbf{Euribor} in Europe.
+    \item \textbf{Initial Rate Period}: Many variable-rate loans start with a lower interest rate for an initial period, known as the "teaser rate." After this period, the rate adjusts according to the terms of the loan.
+    \item \textbf{Adjustment Period}: The frequency of rate adjustments varies and is typically specified in the loan agreement. Common adjustment periods include annually, semi-annually, or monthly.
+    \item \textbf{Caps and Floors}: To protect borrowers from extreme rate fluctuations, many variable-rate loans include caps and floors. Caps limit how much the interest rate can increase during each adjustment period and over the life of the loan. Floors prevent the interest rate from falling below a certain level.
+    \item \textbf{Quota Variability}: Because the interest rate can change, the amount of the periodical payment can also vary. This variability can make budgeting more challenging compared to fixed-rate loans.
+\end{enumerate}
+
+
+\subsection{Euribor}
+\subsubsection{What is Euribor?}
+
+In Europe and Spain, the indicator commonly used to set the annual interest rate of loans is known as the Euribor (Euro Interbank Offered Rate). Euribor is a benchmark interest rate that reflects the average interest rate at which major European banks are willing to lend to each other in the short-term money market.
+
+\subsubsection{How is it calculated?}
+The Euribor is not defined by governments but is directly calculated based on the average interest rates at which a panel of major European banks are willing to lend to each other in the Eurozone.
+It is a market-based rate, reflecting the average lending rates among banks rather than a government-set rate.
+
+While governments do not directly define Euribor, the regulatory environment influences its operation. The European Union has implemented regulations and reforms to ensure the integrity and reliability of financial benchmarks, including Euribor. This includes compliance with the EU Benchmarks Regulation (BMR), which aims to ensure that benchmarks are based on robust and reliable data.
+
+Here's how it is calculated:
+
+\begin{enumerate}
+    \item \textbf{Panel of Banks:} Euribor rates are determined based on submissions from a panel of selected banks. These banks are typically major financial institutions that are active in the Eurozone money market.
+    \item \textbf{Submission Process:} Each bank on the panel submits the rates at which it is willing to lend to other banks in the Eurozone for different maturities, such as one week, one month, three months, six months, and twelve months.
+    \item \textbf{Exclusion of Extremes:} To ensure that the rate is not skewed by outliers, the highest and lowest submissions are excluded. This is done to remove any extreme values that might not reflect the true market rate.
+    \item \textbf{Calculation of the Average:} The remaining rates are averaged to determine the Euribor rate for each maturity. This average is the published Euribor rate.
+    \item \textbf{Publication:} Euribor rates are published daily by the European Money Markets Institute (EMMI), the organization responsible for overseeing the Euribor calculation and publication.
+\end{enumerate}
+
+\end{document}

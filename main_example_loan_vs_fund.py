@@ -23,33 +23,37 @@ CSV_FILE = "files/example_loan_vs_funds.csv"
 plot = True
 
 # Loan
-loan_total_ammount = 100000  # total loan without interests
-loan_r = 0.03  # % of annual interest payment
-loan_N = 40
+loan_principal = 100000  # total loan without interests
+loan_r = 3  # annual interest rate (in %)
+loan_N = 30
 
 # Fund
 rent_expected = 700
 fund_init_ammount = 0  # Just the diff between rent-quota
-fund_r = 0.06  # Expected interest ratio
+fund_r = 6  # Expected interest ratio
 
 ###############################################################################
 ############                       Init Vars                      #############
 ###############################################################################
-interest = []
-principal = []
-principal_balance = []
+# Correct r's
+loan_r = loan_r / 100
+fund_r = fund_r / 100
 
-CSV_FILE = "loan_rent.csv"
+interest = []
+amortization = []
+amortization_balance = []
+
+CSV_FILE = "files/loan_rent.csv"
 
 ###############################################################################
 ############                         Main                         #############
 ###############################################################################
 # Calculate Quota, interest_total and diff_rent_quota
 quota, balance, start2 = lvf.calculate_balance_loan_vs_funds_per_year(
-    loan_total_ammount, N_tot, loan_N, rent_expected, loan_r, fund_r
+    loan_principal, N_tot, loan_N, rent_expected, loan_r, fund_r
 )
 quota_monthly = quota / 12
-interest_total = quota * loan_N - loan_total_ammount
+interest_total = quota * loan_N - loan_principal
 diff_rent_quota = rent_expected - quota_monthly
 
 # Check that rent is always bigger than quota
@@ -65,11 +69,11 @@ if quota_monthly >= rent_expected:
 print(
     "*******************************************\n"
     f"r: {100 * loan_r}%\n"
-    f"Annual Payment fixed quota: {round(quota, 2)}€\n"
-    f"Monthly Payment fixed quota: {round(quota_monthly, 2)}€\n"
-    f"Number of years paying loan: {loan_N}\n"
+    f"Annual fixed quota: {round(quota, 2)}€\n"
+    f"Monthly fixed quota: {round(quota_monthly, 2)}€\n"
+    f"Number of years: {loan_N}\n"
     f"Total Interests: {round(interest_total, 2)}€ "
-    f"({round(100 * interest_total / loan_total_ammount, 2)}%)\n"
+    f"({round(100 * interest_total / loan_principal, 2)}%)\n"
     f"Expected monthly rent: {round(rent_expected, 2)}€\n"
     f"Monthly diff rent-quota: {round(diff_rent_quota, 2)}€\n"
     "*******************************************\n"
@@ -91,7 +95,7 @@ print(
     f"  * initial_contribution = {start2_formated}€\n"
     f"  * monthly              = {round(rent_expected, 2)}€\n"
     f"  * final_balance        = {balance_formated}€\n"
-    "*******************************************"
+    "*******************************************\n"
 )
 
 # Load a dataframe

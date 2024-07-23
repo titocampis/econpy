@@ -28,3 +28,13 @@ output/
 
 # Other files
 test.py
+
+# LaTex
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.synctex.gz
+*.toc
+*.out
+*Zone.Identifier
