@@ -126,8 +126,8 @@ python3 main_loan_vs_fund.py
 ![alt text](pictures/loan_vs_data.png)
 ![alt text](pictures/loan_vs_graph.png)
 
-### 4.2 Completely Balance breakdown for fixed loan years
-It will completely detail the balance over years when fixed loan years.
+### 4.2 Completely Balance breakdown for compound interest investing difference between rent and quota
+It will completely detail an example of the balance over years when investing the difference between a loan quota and the rent of the property. So you can estimate the benefits depending on the number of years you ask for the morgage.
 
 #### Configuration
 | Parameter | Explanation                                        |

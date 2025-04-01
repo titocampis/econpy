@@ -2,10 +2,10 @@ from calculators import loan_calculator as lc
 from utilities import st
 
 # Config
-principal = 6000
-period = "month"  # month / years
-N = 36  # total number of months / years
-r = 9.25  # annual interest rate (in %)
+principal = 90000
+period = "year"  # month / year
+N = 10  # total number of months / years
+r = 3  # annual interest rate (in %)
 
 want_csv = True
 CSV_FILE = "files/loan.csv"
